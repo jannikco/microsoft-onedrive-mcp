@@ -2,357 +2,61 @@
   "schemaVersion": 1,
   "id": "microsoft-onedrive-mcp",
   "kind": "provider-connector",
-  "artifactType": "connector",
-  "qualityVersion": 2,
+  "product": "pipmcp",
   "title": "Microsoft OneDrive MCP server",
-  "description": "Inspect OneDrive documents and create an approved project folder. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+  "description": "Use Microsoft OneDrive with AI agents through one PipMCP API key, actual hosted schemas and governed execution.",
   "status": "ready",
   "verification": "mock-only",
   "releaseEligible": true,
+  "operationIds": [],
   "maintainer": "jannikco",
   "license": "MIT",
-  "product": "pipmcp",
-  "appSlug": "microsoft-onedrive",
-  "appName": "Microsoft OneDrive",
-  "operationIds": [
-    "list_root_children",
-    "get_item",
-    "create_root_folder"
-  ],
-  "sourceRevision": "a6a5a0130de2e98e8fb11cca2bf54350140f5a40802d87a2442363739e4740cb",
+  "attributionSlug": "github-microsoft-onedrive-mcp",
+  "sourceRevision": "0aa52e9640359e73ce970d07755e68dec6b2d8b14ee1948e9103b0815c1ab105",
+  "qualityVersion": 2,
+  "artifactType": "connector",
   "evidence": [
-    "Actual tools/call and direct-provider request contract tests"
+    "Gateway HTTP transport fixtures",
+    "Generated stdio wrapper discovery/call fixtures"
   ],
   "provenance": [
     "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0",
     "https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0",
     "https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0"
   ],
-  "attributionSlug": "github-microsoft-onedrive-mcp",
-  "connectorId": "microsoft-onedrive",
-  "connector": {
-    "id": "microsoft-onedrive",
-    "appSlug": "microsoft-onedrive",
-    "name": "Microsoft OneDrive",
-    "version": "0.2.0",
-    "baseUrl": "https://graph.microsoft.com/v1.0",
-    "auth": {
-      "type": "oauth-access-token",
-      "env": "MICROSOFT_ONEDRIVE_ACCESS_TOKEN"
-    },
-    "tools": [
-      {
-        "name": "list_root_children",
-        "description": "List root children.",
-        "method": "GET",
-        "path": "/me/drive/root/children",
-        "readOnly": true,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "top": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 200
-            },
-            "select": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "description": "Value"
-            },
-            "skiptoken": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "description": "Value"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [],
-          "query": {
-            "top": "$top",
-            "select": "$select",
-            "skiptoken": "$skiptoken"
-          },
-          "body": {}
-        },
-        "sampleArguments": {
-          "top": 10
-        },
-        "pagination": {
-          "type": "link",
-          "cursorInput": "skiptoken",
-          "nextCursorPath": "@odata.nextLink"
-        },
-        "provenance": [
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0"
-        ],
-        "approvalRequired": false,
-        "evidence": {
-          "providerLiveValidation": "not-run",
-          "localValidation": "provider-request-fixture"
-        }
-      },
-      {
-        "name": "get_item",
-        "description": "Get item.",
-        "method": "GET",
-        "path": "/me/drive/items/{itemId}",
-        "readOnly": true,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "itemId": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "description": "Value"
-            },
-            "select": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "description": "Value"
-            }
-          },
-          "required": [
-            "itemId"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [
-            "itemId"
-          ],
-          "query": {
-            "select": "$select"
-          },
-          "body": {}
-        },
-        "sampleArguments": {
-          "itemId": "item-id"
-        },
-        "provenance": [
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0"
-        ],
-        "approvalRequired": false,
-        "evidence": {
-          "providerLiveValidation": "not-run",
-          "localValidation": "provider-request-fixture"
-        }
-      },
-      {
-        "name": "create_root_folder",
-        "description": "Create root folder.",
-        "method": "POST",
-        "path": "/me/drive/root/children",
-        "readOnly": false,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "description": "Value"
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [],
-          "query": {},
-          "body": {
-            "name": "name"
-          }
-        },
-        "sampleArguments": {
-          "name": "Reviewed project"
-        },
-        "body": {
-          "folder": {},
-          "@microsoft.graph.conflictBehavior": "fail"
-        },
-        "provenance": [
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0",
-          "https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0"
-        ],
-        "approvalRequired": true,
-        "evidence": {
-          "providerLiveValidation": "not-run",
-          "localValidation": "provider-request-fixture"
-        }
-      }
-    ],
-    "workflow": {
-      "name": "Inspect OneDrive documents and create an approved project folder",
-      "description": "Inspect OneDrive documents and create an approved project folder. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
-      "steps": [
-        "list_root_children",
-        "get_item",
-        "create_root_folder"
-      ]
-    },
-    "provenance": [
-      "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0",
-      "https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0",
-      "https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0"
-    ],
-    "verification": "mock-only",
-    "providerLiveValidation": "not-run",
-    "capabilityEvidence": {
-      "local": {
-        "level": "Tested",
-        "operations": [
-          {
-            "name": "list_root_children",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "get_item",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "create_root_folder",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          }
-        ],
-        "evidenceRefs": [
-          "Provider request/stdio contract tests"
-        ],
-        "mode": "local"
-      },
-      "managed": {
-        "level": "Documented",
-        "operations": [
-          {
-            "name": "list_root_children",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "get_item",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "create_root_folder",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          }
-        ],
-        "evidenceRefs": [],
-        "mode": "managed"
-      }
-    },
-    "requiredScopes": {
-      "read": [
-        "Files.Read"
-      ],
-      "write": [
-        "Files.ReadWrite"
-      ]
-    },
-    "repoId": "microsoft-onedrive-mcp",
-    "product": "pipmcp",
-    "artifactType": "connector",
-    "sourceRevision": "a6a5a0130de2e98e8fb11cca2bf54350140f5a40802d87a2442363739e4740cb",
-    "managedAvailability": {
-      "status": "import-required",
-      "integration": "openapi-to-mcp",
-      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
-    }
+  "utility": {
+    "problem": "Inspect OneDrive documents and create an approved project folder. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+    "output": "Actual hosted tool schemas and durable governed execution receipts"
   },
+  "appSlug": "microsoft-onedrive",
+  "appName": "Microsoft OneDrive",
+  "connectorId": "microsoft-onedrive",
+  "executionAuthority": "pipmcp-gateway",
+  "version": "1.0.0",
+  "agentReady": true,
   "capabilityEvidence": {
     "local": {
       "level": "Tested",
       "operations": [
         {
-          "name": "list_root_children",
+          "name": "gateway_transport",
           "level": "Tested",
+          "method": "contract-fixture",
           "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "get_item",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "create_root_folder",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
+            "Generated gateway/stdio fixtures"
+          ]
         }
       ],
       "evidenceRefs": [
-        "Provider request/stdio contract tests"
+        "Generated gateway/stdio fixtures"
       ],
       "mode": "local"
     },
     "managed": {
       "level": "Documented",
-      "operations": [
-        {
-          "name": "list_root_children",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "get_item",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "create_root_folder",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        }
-      ],
+      "operations": [],
       "evidenceRefs": [],
       "mode": "managed"
     }
-  },
-  "utility": {
-    "problem": "Inspect OneDrive documents and create an approved project folder. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
-    "output": "Actual provider API results through local MCP tools"
-  },
-  "providerDocs": "https://learn.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0"
+  }
 }
